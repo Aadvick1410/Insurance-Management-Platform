@@ -1,9 +1,8 @@
 import axios from 'axios';
-
 import toast from 'react-hot-toast';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://insurance-backend-z3gy.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,7 +26,6 @@ api.interceptors.response.use(
       } else if (status === 403) {
         toast.error('You do not have permission to perform this action.');
       } else if (status === 400 && data.validationErrors) {
-        // Handle validation errors from backend
         Object.values(data.validationErrors).forEach(msg => toast.error(msg));
       } else if (data.message) {
         toast.error(data.message);
