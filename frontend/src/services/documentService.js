@@ -1,7 +1,7 @@
 import api from './api';
 
 export const uploadDocument = async (formData) => {
-  const response = await api.post('/api/documents', formData, {
+  const response = await api.post('/documents', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -10,26 +10,25 @@ export const uploadDocument = async (formData) => {
 };
 
 export const getDocumentsByCustomer = async (customerId) => {
-  const response = await api.get(`/api/documents/customer/${customerId}`);
+  const response = await api.get(`/documents/customer/${customerId}`);
   return response.data;
 };
 
 export const getDocumentsByPolicy = async (policyId) => {
-  const response = await api.get(`/api/documents/policy/${policyId}`);
+  const response = await api.get(`/documents/policy/${policyId}`);
   return response.data;
 };
 
 export const getDocumentsByClaim = async (claimId) => {
-  const response = await api.get(`/api/documents/claim/${claimId}`);
+  const response = await api.get(`/documents/claim/${claimId}`);
   return response.data;
 };
 
 export const downloadDocument = async (id, fileName) => {
-  const response = await api.get(`/api/documents/${id}/download`, {
-    responseType: 'blob' // Important for downloading files
+  const response = await api.get(`/documents/${id}/download`, {
+    responseType: 'blob'
   });
   
-  // Create a blob and trigger download
   const url = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement('a');
   link.href = url;
@@ -40,6 +39,6 @@ export const downloadDocument = async (id, fileName) => {
 };
 
 export const deleteDocument = async (id) => {
-  const response = await api.delete(`/api/documents/${id}`);
+  const response = await api.delete(`/documents/${id}`);
   return response.data;
 };
