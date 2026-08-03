@@ -1,6 +1,6 @@
 # Insurance Management Platform
 
-A comprehensive enterprise web application for managing insurance operations — policies, claims, premium payments, documents, and reporting — with role-based access for Administrators, Insurance Agents, and Customers.
+A comprehensive enterprise web application for managing insurance operations  policies, claims, premium payments, documents, and reporting  with role-based access for Administrators, Insurance Agents, and Customers.
 
 ## Tech Stack
 
