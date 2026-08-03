@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface ClaimRepository extends JpaRepository<Claim, Long> {
     List<Claim> findByPolicyId(Long policyId);
-    List<Claim> findByStatus(ClaimStatus status);
+    List<Claim> findByClaimStatus(ClaimStatus claimStatus);
 }

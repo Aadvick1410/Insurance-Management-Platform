@@ -34,14 +34,14 @@ public class Claim {
     private BigDecimal claimAmount;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String reason;
+    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ClaimStatus status;
+    private ClaimStatus claimStatus;
 
     @Column(nullable = false)
-    private LocalDate submissionDate;
+    private LocalDate dateOfIncident;
 
     private String reviewedBy;
 
