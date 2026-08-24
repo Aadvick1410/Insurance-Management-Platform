@@ -19,8 +19,16 @@ public class ReportController {
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
     public ResponseEntity<DashboardMetricsResponse> getDashboardMetrics() {
-        // Typically only Admins and Agents should see global dashboard metrics.
-        // Customers would need a specialized dashboard that only aggregates their personal data.
         return ResponseEntity.ok(reportService.getDashboardMetrics());
+    }
+
+    @GetMapping("/pdf")
+    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
+    public ResponseEntity<byte[]> downloadMonthlyReportPdf() {
+        byte[] pdfBytes = reportService.generateMonthlyBusinessReportPdf();
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "Monthly_Business_Report.pdf");
+        return ResponseEntity.ok().headers(headers).body(pdfBytes);
     }
 }

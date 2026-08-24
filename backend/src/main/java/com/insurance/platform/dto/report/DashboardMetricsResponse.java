@@ -24,7 +24,9 @@ public class DashboardMetricsResponse {
     // Charts/Breakdowns
     private Map<String, Long> policiesByType;
     private Map<String, Long> claimsByStatus;
+    private Map<String, BigDecimal> monthlyRevenue;
     
     // Optional additional metrics
     private long totalOverduePayments;
+    private long totalExpiredPolicies;
 }
