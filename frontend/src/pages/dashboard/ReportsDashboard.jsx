@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { getDashboardMetrics } from '../../services/reportService';
+import { getDashboardMetrics, downloadMonthlyReportPdf } from '../../services/reportService';
 import toast from 'react-hot-toast';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js';
+import { Pie, Bar, Line } from 'react-chartjs-2';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement);
 
 const ReportsDashboard = () => {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const fetchMetrics = async () => {
@@ -23,6 +24,18 @@ const ReportsDashboard = () => {
     };
     fetchMetrics();
   }, []);
+
+  const handleDownloadReport = async () => {
+    setDownloading(true);
+    try {
+      await downloadMonthlyReportPdf();
+      toast.success('Report downloaded successfully');
+    } catch (error) {
+      toast.error('Failed to download PDF report');
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   if (loading) return <div className="p-6 text-center">Loading dashboard...</div>;
   if (!metrics) return <div className="p-6 text-center text-red-500">Could not load dashboard data</div>;
@@ -78,12 +91,46 @@ const ReportsDashboard = () => {
     },
   };
 
+  // Prepare data for Line Chart (Monthly Revenue)
+  const revenueMonths = Object.keys(metrics.monthlyRevenue || {}).sort();
+  const revenueAmounts = revenueMonths.map(month => metrics.monthlyRevenue[month]);
+
+  const lineData = {
+    labels: revenueMonths,
+    datasets: [
+      {
+        label: 'Monthly Revenue ($)',
+        data: revenueAmounts,
+        fill: false,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        tension: 0.1,
+      },
+    ],
+  };
+
+  const lineOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { display: true, text: 'Monthly Revenue Growth' },
+    },
+  };
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard & Reports</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Dashboard & Reports</h1>
+        <button 
+          onClick={handleDownloadReport} 
+          disabled={downloading}
+          className="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 disabled:bg-indigo-400"
+        >
+          {downloading ? 'Generating PDF...' : 'Download PDF Report'}
+        </button>
+      </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow border-t-4 border-blue-500">
           <h3 className="text-gray-500 text-sm font-medium">Total Customers</h3>
           <p className="text-3xl font-bold text-gray-800 mt-2">{metrics.totalCustomers}</p>
@@ -91,6 +138,10 @@ const ReportsDashboard = () => {
         <div className="bg-white p-6 rounded-lg shadow border-t-4 border-green-500">
           <h3 className="text-gray-500 text-sm font-medium">Active Policies</h3>
           <p className="text-3xl font-bold text-gray-800 mt-2">{metrics.totalActivePolicies}</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow border-t-4 border-red-500">
+          <h3 className="text-gray-500 text-sm font-medium">Expired Policies</h3>
+          <p className="text-3xl font-bold text-gray-800 mt-2">{metrics.totalExpiredPolicies}</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow border-t-4 border-yellow-500">
           <h3 className="text-gray-500 text-sm font-medium">Pending Claims</h3>
@@ -111,7 +162,7 @@ const ReportsDashboard = () => {
       )}
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Policies by Type</h3>
           <div className="h-64 flex justify-center">
@@ -130,6 +181,17 @@ const ReportsDashboard = () => {
                <Bar data={barData} options={barOptions} />
             ) : (
                <p className="text-gray-500 self-center">No claim data available.</p>
+            )}
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Monthly Revenue</h3>
+          <div className="h-64 flex justify-center">
+            {revenueMonths.length > 0 ? (
+               <Line data={lineData} options={lineOptions} />
+            ) : (
+               <p className="text-gray-500 self-center">No revenue data available.</p>
             )}
           </div>
         </div>
