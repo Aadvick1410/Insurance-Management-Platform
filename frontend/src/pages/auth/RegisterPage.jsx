@@ -42,7 +42,7 @@ const RegisterPage = () => {
         </div>
 
         {/* Left Side - Illustrations (Hidden on Mobile) */}
-        <div className="hidden md:flex md:w-1/2 p-8 flex-col justify-center items-center relative bg-[#fefefe]">
+        <div className="hidden md:flex md:w-1/2 p-8 flex-col justify-center items-center relative bg-white">
            <img src="/illustration.png" alt="Illustration" className="w-full max-w-sm opacity-90 object-contain" />
         </div>
 
