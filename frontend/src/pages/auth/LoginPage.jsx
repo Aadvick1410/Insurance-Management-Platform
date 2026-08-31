@@ -6,13 +6,21 @@ import { FiUser, FiEye } from 'react-icons/fi';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login({ email, password });
-    navigate('/dashboard');
+    setLoading(true);
+    try {
+      await login({ email, password });
+      navigate('/dashboard');
+    } catch (error) {
+      // Interceptor handles the toast
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,9 +82,10 @@ const LoginPage = () => {
             {/* Submit */}
             <button 
               type="submit" 
-              className="w-full bg-[#6b73ff] hover:bg-[#5a62ff] text-white font-medium py-3 rounded-lg shadow-md transition duration-300 tracking-wide mt-2"
+              disabled={loading}
+              className="w-full bg-[#6b73ff] hover:bg-[#5a62ff] text-white font-medium py-3 rounded-lg shadow-md transition duration-300 tracking-wide mt-2 disabled:opacity-50"
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
 
             {/* Footer */}
