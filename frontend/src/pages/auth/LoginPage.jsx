@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FiUser, FiEye } from 'react-icons/fi';
-import { FaWeixin, FaQq, FaWeibo } from 'react-icons/fa';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -26,8 +25,7 @@ const LoginPage = () => {
         </div>
 
         {/* Left Side - Illustrations (Hidden on Mobile) */}
-        <div className="hidden md:flex md:w-1/2 p-8 flex-col justify-center items-center relative border-r border-gray-100 bg-[#fefefe]">
-           {/* We use a beautiful inline SVG as a placeholder for the user's illustration */}
+        <div className="hidden md:flex md:w-1/2 p-8 flex-col justify-center items-center relative bg-[#fefefe]">
            <svg xmlns="http://www.w3.org/2001/svg" viewBox="0 0 500 500" className="w-full max-w-sm opacity-90">
               <path fill="#e2e8f0" d="M100 400 h300 v5 h-300 z" />
               <circle cx="250" cy="200" r="100" fill="#cbd5e1" opacity="0.3"/>
@@ -43,7 +41,6 @@ const LoginPage = () => {
               <rect x="215" y="320" width="15" height="50" fill="#8b5cf6" />
               <rect x="235" y="360" width="15" height="10" fill="#3b82f6" />
            </svg>
-           <p className="mt-8 text-gray-400 text-sm italic">Illustration Area</p>
         </div>
 
         {/* Right Side - Login Form */}
@@ -98,15 +95,7 @@ const LoginPage = () => {
 
             {/* Footer */}
             <div className="pt-6 flex items-center justify-between text-xs text-gray-500">
-              <a href="#" className="hover:text-[#6b73ff] transition-colors">Haven't registered yet?</a>
-              <div className="flex items-center space-x-3">
-                <span>Other ways</span>
-                <div className="flex space-x-2">
-                  <span className="w-6 h-6 rounded-full bg-[#4cb55e] text-white flex items-center justify-center cursor-pointer hover:opacity-80"><FaWeixin size={12} /></span>
-                  <span className="w-6 h-6 rounded-full bg-[#3fa8ea] text-white flex items-center justify-center cursor-pointer hover:opacity-80"><FaQq size={12} /></span>
-                  <span className="w-6 h-6 rounded-full bg-[#df5246] text-white flex items-center justify-center cursor-pointer hover:opacity-80"><FaWeibo size={12} /></span>
-                </div>
-              </div>
+              <Link to="/register" className="hover:text-[#6b73ff] transition-colors font-medium">Haven't registered yet?</Link>
             </div>
           </form>
         </div>
