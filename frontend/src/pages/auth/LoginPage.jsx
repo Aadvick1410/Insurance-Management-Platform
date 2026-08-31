@@ -26,21 +26,7 @@ const LoginPage = () => {
 
         {/* Left Side - Illustrations (Hidden on Mobile) */}
         <div className="hidden md:flex md:w-1/2 p-8 flex-col justify-center items-center relative bg-[#fefefe]">
-           <svg xmlns="http://www.w3.org/2001/svg" viewBox="0 0 500 500" className="w-full max-w-sm opacity-90">
-              <path fill="#e2e8f0" d="M100 400 h300 v5 h-300 z" />
-              <circle cx="250" cy="200" r="100" fill="#cbd5e1" opacity="0.3"/>
-              <path fill="#64748b" d="M250 400 C250 250, 150 200, 150 150 C150 100, 250 100, 250 50 C250 100, 350 100, 350 150 C350 200, 250 250, 250 400 Z" />
-              <rect x="220" y="250" width="60" height="150" fill="#475569" />
-              <circle cx="200" cy="150" r="15" fill="#8b5cf6" />
-              <circle cx="300" cy="120" r="12" fill="#8b5cf6" />
-              <circle cx="180" cy="220" r="10" fill="#8b5cf6" />
-              <rect x="50" y="250" width="120" height="80" fill="none" stroke="#cbd5e1" strokeWidth="2" />
-              <circle cx="110" cy="290" r="25" fill="#3b82f6" />
-              <rect x="180" y="300" width="120" height="80" fill="none" stroke="#cbd5e1" strokeWidth="2" />
-              <rect x="195" y="340" width="15" height="30" fill="#64748b" />
-              <rect x="215" y="320" width="15" height="50" fill="#8b5cf6" />
-              <rect x="235" y="360" width="15" height="10" fill="#3b82f6" />
-           </svg>
+           <img src="/illustration.png" alt="Illustration" className="w-full max-w-sm opacity-90 object-contain" />
         </div>
 
         {/* Right Side - Login Form */}
