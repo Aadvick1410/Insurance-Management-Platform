@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -135,19 +136,23 @@ function Card({ children, className = '' }) {
   );
 }
 
-function StatCard({ title, value, subtitle, icon: Icon, topBorderColor }) {
-  return (
-    <Card className={`p-5 border-t-4 ${topBorderColor} transition hover:-translate-y-0.5 hover:shadow-md`}>
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-slate-500">{title}</p>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900">{value}</p>
-          <p className="mt-1.5 text-xs text-slate-400">{subtitle}</p>
-        </div>
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-          <Icon size={20} />
-        </div>
+function StatCard({ title, value, subtitle, icon: Icon, topBorderColor, to }) {
+  const content = (
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium text-slate-500">{title}</p>
+        <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900">{value}</p>
+        <p className="mt-1.5 text-xs text-slate-400">{subtitle}</p>
       </div>
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition-colors group-hover:bg-indigo-50 group-hover:text-indigo-600">
+        <Icon size={20} />
+      </div>
+    </div>
+  );
+
+  return (
+    <Card className={`p-5 border-t-4 ${topBorderColor} transition hover:-translate-y-0.5 hover:shadow-md group cursor-pointer`}>
+      {to ? <Link to={to} className="block">{content}</Link> : content}
     </Card>
   );
 }
@@ -203,21 +208,22 @@ function EmptyChart({ message }) {
   );
 }
 
-function AttentionItem({ value, title, subtitle, toneClass }) {
-  return (
-    <div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+function AttentionItem({ value, title, subtitle, toneClass, to }) {
+  const content = (
+    <div className="flex items-center justify-between py-4 first:pt-0 last:pb-0 group cursor-pointer">
       <div className="flex items-center gap-3">
-        <div className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl px-2 text-sm font-bold ${toneClass}`}>
+        <div className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl px-2 text-sm font-bold transition-transform group-hover:scale-105 ${toneClass}`}>
           {number(value)}
         </div>
         <div>
-          <p className="text-sm font-semibold text-slate-800">{title}</p>
+          <p className="text-sm font-semibold text-slate-800 transition-colors group-hover:text-indigo-600">{title}</p>
           <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>
         </div>
       </div>
-      <FiChevronRight size={16} className="text-slate-300" />
+      <FiChevronRight size={16} className="text-slate-300 transition-transform group-hover:translate-x-1 group-hover:text-indigo-600" />
     </div>
   );
+  return to ? <Link to={to} className="block">{content}</Link> : content;
 }
 
 /* =========================================================
@@ -453,21 +459,23 @@ const ReportsDashboard = () => {
 
         {/* OVERDUE ALERT */}
         {data?.totalOverduePayments > 0 && (
-          <div className="mb-6 flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            <FiAlertCircle size={18} className="shrink-0" />
-            <span>
-              <strong>{number(data.totalOverduePayments)}</strong> overdue premium payments require follow-up.
-            </span>
-          </div>
+          <Link to="/payments" className="block mb-6">
+            <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 transition hover:bg-amber-100 cursor-pointer">
+              <FiAlertCircle size={18} className="shrink-0" />
+              <span>
+                <strong>{number(data.totalOverduePayments)}</strong> overdue premium payments require follow-up.
+              </span>
+            </div>
+          </Link>
         )}
 
         {/* PRIMARY KPIs */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <StatCard title="Total Customers"  value={number(data?.totalCustomers)}        subtitle="Registered customers" icon={FiUsers}       topBorderColor="border-blue-500"   />
-          <StatCard title="Active Policies"  value={number(data?.totalActivePolicies)}   subtitle="Currently active"     icon={FiShield}      topBorderColor="border-emerald-500"/>
-          <StatCard title="Expired Policies" value={number(data?.totalExpiredPolicies)}  subtitle="Requires attention"   icon={FiAlertCircle} topBorderColor="border-red-500"    />
-          <StatCard title="Pending Claims"   value={number(data?.totalPendingClaims)}    subtitle="Awaiting review"      icon={FiFileText}    topBorderColor="border-amber-500"  />
-          <StatCard title="Total Revenue"    value={currency(data?.totalRevenue)}        subtitle="Premium collected"    icon={FiDollarSign}  topBorderColor="border-indigo-500" />
+          <StatCard to="/customers" title="Total Customers"  value={number(data?.totalCustomers)}        subtitle="Registered customers" icon={FiUsers}       topBorderColor="border-blue-500"   />
+          <StatCard to="/policies"  title="Active Policies"  value={number(data?.totalActivePolicies)}   subtitle="Currently active"     icon={FiShield}      topBorderColor="border-emerald-500"/>
+          <StatCard to="/policies"  title="Expired Policies" value={number(data?.totalExpiredPolicies)}  subtitle="Requires attention"   icon={FiAlertCircle} topBorderColor="border-red-500"    />
+          <StatCard to="/claims"    title="Pending Claims"   value={number(data?.totalPendingClaims)}    subtitle="Awaiting review"      icon={FiFileText}    topBorderColor="border-amber-500"  />
+          <StatCard to="/payments"  title="Total Revenue"    value={currency(data?.totalRevenue)}        subtitle="Premium collected"    icon={FiDollarSign}  topBorderColor="border-indigo-500" />
         </div>
 
         {/* SECONDARY MINI STATS â€” mock only */}
@@ -566,9 +574,9 @@ const ReportsDashboard = () => {
             </div>
             <p className="mt-1 text-sm text-slate-500">Items requiring operational review</p>
             <div className="mt-5 divide-y divide-slate-100">
-              <AttentionItem value={data?.totalPendingClaims    || 0} title="Pending Claims"   subtitle="Awaiting review"             toneClass="bg-amber-50 text-amber-700"   />
-              <AttentionItem value={data?.totalExpiredPolicies  || 0} title="Expired Policies" subtitle="Renewal follow-up required"   toneClass="bg-red-50 text-red-700"       />
-              <AttentionItem value={data?.totalOverduePayments  || 0} title="Overdue Premiums" subtitle="Payment follow-up required"   toneClass="bg-violet-50 text-violet-700" />
+              <AttentionItem to="/claims"   value={data?.totalPendingClaims    || 0} title="Pending Claims"   subtitle="Awaiting review"             toneClass="bg-amber-50 text-amber-700"   />
+              <AttentionItem to="/policies" value={data?.totalExpiredPolicies  || 0} title="Expired Policies" subtitle="Renewal follow-up required"   toneClass="bg-red-50 text-red-700"       />
+              <AttentionItem to="/payments" value={data?.totalOverduePayments  || 0} title="Overdue Premiums" subtitle="Payment follow-up required"   toneClass="bg-violet-50 text-violet-700" />
             </div>
           </Card>
         </div>
