@@ -48,6 +48,9 @@ const DashboardLayout = () => {
           <Link to="/documents" onClick={() => setSidebarOpen(false)} className="block py-3 px-6 text-gray-300 hover:bg-gray-800 hover:text-white border-l-4 border-transparent hover:border-blue-500">
             Documents
           </Link>
+          <Link to="/demo" onClick={() => setSidebarOpen(false)} className="block py-3 px-6 text-blue-400 hover:bg-gray-800 hover:text-white border-l-4 border-transparent hover:border-blue-500 font-medium">
+            Demo Accounts (RBAC)
+          </Link>
         </nav>
       </div>
 

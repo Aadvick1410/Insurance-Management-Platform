@@ -88,9 +88,44 @@ const LoginPage = () => {
               {loading ? 'Logging in...' : 'Login'}
             </button>
 
+            {/* Quick Demo Accounts */}
+            <div className="pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Demo Quick Login</span>
+                <span className="text-[10px] text-gray-400">Click to fill</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setEmail('admin@insurance.com'); setPassword('admin123'); }}
+                  className="px-2 py-1.5 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-md border border-blue-200 transition"
+                  title="Role: ADMIN | Full system & dashboard access"
+                >
+                  👑 Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEmail('agent@insurance.com'); setPassword('agent123'); }}
+                  className="px-2 py-1.5 text-xs font-medium bg-purple-50 text-purple-700 hover:bg-purple-100 rounded-md border border-purple-200 transition"
+                  title="Role: AGENT | Policy & claim reviews"
+                >
+                  💼 Agent
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEmail('customer@insurance.com'); setPassword('customer123'); }}
+                  className="px-2 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-md border border-emerald-200 transition"
+                  title="Role: CUSTOMER | Personal policy & claims"
+                >
+                  👤 Customer
+                </button>
+              </div>
+            </div>
+
             {/* Footer */}
-            <div className="pt-6 flex items-center justify-between text-xs text-gray-500">
+            <div className="pt-2 flex items-center justify-between text-xs text-gray-500">
               <Link to="/register" className="hover:text-[#6b73ff] transition-colors font-medium">Haven't registered yet?</Link>
+              <span className="text-[11px] text-gray-400">Pass: admin123 / agent123 / customer123</span>
             </div>
           </form>
         </div>

@@ -1,0 +1,19 @@
+# Maven binaries (use wrapper instead)
+apache-maven*/
+apache-maven.zip
+
+# Uploads (persisted via Docker volume)
+uploads/*
+!uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Environment
+.env

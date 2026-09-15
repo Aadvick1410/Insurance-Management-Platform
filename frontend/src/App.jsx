@@ -20,6 +20,7 @@ import ClaimDetailPage from './pages/claims/ClaimDetailPage'
 import DocumentListPage from './pages/documents/DocumentListPage'
 import DocumentUploadPage from './pages/documents/DocumentUploadPage'
 import ReportsDashboard from './pages/dashboard/ReportsDashboard'
+import DemoUsersPage from './pages/demo/DemoUsersPage'
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             <Route path="claims/:id/edit" element={<ClaimFormPage />} />
             <Route path="documents" element={<DocumentListPage />} />
             <Route path="documents/upload" element={<DocumentUploadPage />} />
+            <Route path="demo" element={<DemoUsersPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
