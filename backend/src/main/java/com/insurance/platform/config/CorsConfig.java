@@ -19,7 +19,25 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList(allowedOrigins.split(",")));
+
+        // Parse the explicit origins list
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+
+        // Use setAllowedOriginPatterns which supports Spring-style wildcards.
+        // To also support multi-level Vercel preview subdomains (e.g. foo-bar-baz-projects.vercel.app)
+        // we add a blanket *.vercel.app pattern AND handle it via a custom check below.
+        configuration.setAllowedOriginPatterns(origins);
+
+        // Additionally allow ALL vercel.app subdomains (including nested ones like
+        // insurance-management-platform-abc123-projects.vercel.app) by registering
+        // a second pattern that matches any subdomain of vercel.app
+        if (origins.stream().noneMatch(o -> o.contains("**"))) {
+            // Ensure we cover preview deployments
+            configuration.addAllowedOriginPattern("https://*.vercel.app");
+            configuration.addAllowedOriginPattern("https://*-projects.vercel.app");
+            configuration.addAllowedOriginPattern("https://*.onrender.com");
+        }
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
