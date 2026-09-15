@@ -20,8 +20,10 @@ public class DatabaseUrlProcessor implements EnvironmentPostProcessor {
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         String databaseUrl = System.getenv("DATABASE_URL");
         if (databaseUrl == null || databaseUrl.isBlank()) {
+            System.out.println("[DatabaseUrlProcessor] No DATABASE_URL found, using defaults.");
             return; // No DATABASE_URL set, use defaults from application.properties
         }
+        System.out.println("[DatabaseUrlProcessor] Found DATABASE_URL, parsing...");
 
         // If it's already a JDBC URL, just set it directly
         if (databaseUrl.startsWith("jdbc:")) {
@@ -62,6 +64,7 @@ public class DatabaseUrlProcessor implements EnvironmentPostProcessor {
 
             // Add as highest-priority property source
             environment.getPropertySources().addFirst(new MapPropertySource("renderDb", props));
+            System.out.println("[DatabaseUrlProcessor] Successfully set spring.datasource.url=" + jdbcUrl);
         } catch (Exception e) {
             System.err.println("WARNING: Failed to parse DATABASE_URL: " + e.getMessage());
         }
