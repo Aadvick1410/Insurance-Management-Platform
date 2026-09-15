@@ -1,4 +1,4 @@
-﻿package com.insurance.platform.config;
+package com.insurance.platform.config;
 
 import com.insurance.platform.entity.*;
 import com.insurance.platform.entity.enums.*;
