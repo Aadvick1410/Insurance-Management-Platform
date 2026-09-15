@@ -1,4 +1,4 @@
-package com.insurance.platform.config;
+﻿package com.insurance.platform.config;
 
 import com.insurance.platform.entity.*;
 import com.insurance.platform.entity.enums.*;
@@ -10,15 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-/**
- * Seeds demo accounts and data into the database on startup if they don't already exist.
- * This ensures the demo credentials shown on the login page actually work in production.
- */
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -33,17 +28,24 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        System.out.println("[DataInitializer] Starting...");
         seedUser("Admin User",    "admin@insurance.com",    "admin123",    Role.ADMIN);
         seedUser("Agent Smith",   "agent@insurance.com",    "agent123",    Role.AGENT);
         
-        Customer c1 = seedCustomer("John Doe",  "customer@insurance.com", "customer123");
-        Customer c2 = seedCustomer("Alice Smith", "alice@insurance.com", "customer123");
-        Customer c3 = seedCustomer("Bob Jones", "bob@insurance.com", "customer123");
-        Customer c4 = seedCustomer("Eve Adams", "eve@insurance.com", "customer123");
-        Customer c5 = seedCustomer("Charlie Brown", "charlie@insurance.com", "customer123");
+        seedCustomer("John Doe",  "customer@insurance.com", "customer123");
+        seedCustomer("Alice Smith", "alice@insurance.com", "customer123");
+        seedCustomer("Bob Jones", "bob@insurance.com", "customer123");
+        seedCustomer("Eve Adams", "eve@insurance.com", "customer123");
+        seedCustomer("Charlie Brown", "charlie@insurance.com", "customer123");
 
-        if (policyRepository.count() == 0 && c1 != null && c2 != null && c3 != null) {
-            seedInsuranceData(Arrays.asList(c1, c2, c3, c4, c5));
+        if (policyRepository.count() == 0) {
+            System.out.println("[DataInitializer] Policy count is 0. Generating dummy data...");
+            List<Customer> allCustomers = customerRepository.findAll();
+            if (!allCustomers.isEmpty()) {
+                seedInsuranceData(allCustomers);
+            } else {
+                System.out.println("[DataInitializer] Error: No customers found to assign policies to!");
+            }
         }
 
         System.out.println("[DataInitializer] Demo data ready.");
@@ -67,7 +69,6 @@ public class DataInitializer implements CommandLineRunner {
             policy.setPremiumAmount(BigDecimal.valueOf(1000 + random.nextInt(9000)));
             policy = policyRepository.save(policy);
             
-            // Payments
             int numPayments = random.nextInt(4);
             for (int j = 0; j < numPayments; j++) {
                 PremiumPayment pp = new PremiumPayment();
@@ -78,7 +79,6 @@ public class DataInitializer implements CommandLineRunner {
                 premiumPaymentRepository.save(pp);
             }
             
-            // Claims
             if (random.nextDouble() > 0.7) {
                 Claim claim = new Claim();
                 claim.setPolicy(policy);
@@ -104,11 +104,10 @@ public class DataInitializer implements CommandLineRunner {
             user.setPassword(passwordEncoder.encode(password));
             user.setRole(role);
             userRepository.save(user);
-            System.out.println("[DataInitializer] Created user: " + email);
         }
     }
 
-    private Customer seedCustomer(String name, String email, String password) {
+    private void seedCustomer(String name, String email, String password) {
         if (!userRepository.existsByEmail(email)) {
             User user = new User();
             user.setName(name);
@@ -124,10 +123,7 @@ public class DataInitializer implements CommandLineRunner {
             customer.setDob(LocalDate.of(1980 + random.nextInt(20), 1 + random.nextInt(12), 1 + random.nextInt(28)));
             customer.setPhone("+1" + (1000000000L + random.nextInt(900000000)));
             customer.setAddress(random.nextInt(999) + " Main St, City");
-            System.out.println("[DataInitializer] Created customer: " + email);
-            return customerRepository.save(customer);
-        } else {
-            return customerRepository.findByEmail(email).orElse(null);
+            customerRepository.save(customer);
         }
     }
 }
